@@ -7,3 +7,5 @@ config :goose_egg_db, GooseEggDb.Repo,
   database: "goose_egg_db_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :tesla, adapter: Tesla.Mock

@@ -3,6 +3,17 @@ defmodule MLBStatsClientTest do
   alias MLBStats.Client
   doctest Client
 
+  import Tesla.Mock
+
+  setup do
+    mock(fn
+      %{method: :get, url: url} ->
+        %Tesla.Env{status: 200, url: url}
+    end)
+
+    :ok
+  end
+
   test "given a valid game pk, fetches the live feed" do
     game_pk = "529572"
     _expected_url = "https://statsapi.mlb.com/api/v1/game/" <> game_pk <> "/feed/live"
