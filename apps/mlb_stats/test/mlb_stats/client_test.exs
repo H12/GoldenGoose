@@ -3,6 +3,8 @@ defmodule MLBStatsClientTest do
   alias MLBStats.Client
   doctest Client
 
+  @base_url "https://statsapi.mlb.com/api/v1.1"
+
   import Tesla.Mock
 
   setup do
@@ -16,18 +18,19 @@ defmodule MLBStatsClientTest do
 
   test "given a valid game pk, fetches the live feed" do
     game_pk = "529572"
-    _expected_url = "https://statsapi.mlb.com/api/v1/game/" <> game_pk <> "/feed/live"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
 
     assert %{url: _expected_url} = Client.game_feed(game_pk)
   end
 
   test "returns a schedule" do
-    assert %{url: "https://statsapi.mlb.com/api/v1/schedule/?sportId=1"} = Client.daily_schedule()
+    _expected_url = @base_url <> "/schedule/?sportId=1"
+    assert %{url: _expected_url} = Client.daily_schedule()
   end
 
   test "returns a schedule for a given date" do
     date = "2019-06-08"
-    _expected_url = "https://statsapi.mlb.com/api/v1/schedule/?sportId=1&date=" <> date
+    _expected_url = @base_url <> "/schedule/?sportId=1&date=" <> date
 
     assert %{url: _expected_url} = Client.daily_schedule(date)
   end
@@ -37,8 +40,7 @@ defmodule MLBStatsClientTest do
     end_date = "2019-06-30"
 
     _expected_url =
-      "https://statsapi.mlb.com/api/v1/schedule/?sportId=1&startDate=" <>
-        start_date <> "&endDate=" <> end_date
+      @base_url <> "/schedule/?sportId=1&startDate=" <> start_date <> "&endDate=" <> end_date
 
     assert %{url: _expected_url} = Client.ranged_schedule(start_date, end_date)
   end
