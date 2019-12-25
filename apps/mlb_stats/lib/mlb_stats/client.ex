@@ -26,12 +26,12 @@ defmodule MLBStats.Client do
 
   ## Examples
 
-      iex> %{status: status} = MLBStats.Client.schedule()
+      iex> %{status: status} = MLBStats.Client.daily_schedule()
       iex> status
       200
 
   """
-  def schedule() do
+  def daily_schedule() do
     get("/schedule/" <> "?sportId=1") |> handle_response
   end
 
@@ -40,13 +40,30 @@ defmodule MLBStats.Client do
 
   ## Examples
 
-      iex> %{status: status} = MLBStats.Client.schedule("2019-06-08")
+      iex> %{status: status} = MLBStats.Client.daily_schedule("2019-06-08")
       iex> status
       200
 
   """
-  def schedule(date) do
+  def daily_schedule(date) do
     get("/schedule/" <> "?sportId=1" <> "&date=" <> date) |> handle_response
+  end
+
+  @doc """
+  Fetches the MLB schedule for a range of dates given two date Strings of format "yyyy-mm-dd" which
+  denote the start and end dates of the range.
+
+
+  ## Examples
+
+    iex> %{status: status} = MLBStats.Client.ranged_schedule("2019-06-01", "2019-6-30")
+    iex> status
+    200
+
+  """
+  def ranged_schedule(start_date, end_date) do
+    get("/schedule/" <> "?sportId=1" <> "&startDate=" <> start_date <> "&endDate=" <> end_date)
+    |> handle_response
   end
 
   defp handle_response({:ok, response}), do: response
