@@ -4,7 +4,7 @@ defmodule MLBStats.Client do
   """
   use Tesla
 
-  plug(Tesla.Middleware.BaseUrl, "https://statsapi.mlb.com/api/v1")
+  plug(Tesla.Middleware.BaseUrl, "https://statsapi.mlb.com/api/v1.1")
   plug(Tesla.Middleware.JSON, engine_opts: [keys: :atoms])
 
   @doc """
