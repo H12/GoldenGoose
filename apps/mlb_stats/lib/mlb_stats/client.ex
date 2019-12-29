@@ -4,7 +4,7 @@ defmodule MLBStats.Client do
   """
   use Tesla
 
-  plug(Tesla.Middleware.BaseUrl, "https://statsapi.mlb.com/api/v1.1")
+  plug(Tesla.Middleware.BaseUrl, "https://statsapi.mlb.com/api/v1")
   plug(Tesla.Middleware.JSON, engine_opts: [keys: :atoms])
 
   @doc """
@@ -19,6 +19,34 @@ defmodule MLBStats.Client do
   """
   def game_feed(game_pk) do
     get("/game/" <> game_pk <> "/feed/live") |> handle_response
+  end
+
+  @doc """
+  Given a valid pk (a game's unique id), fetches the linescore for that game.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.game_feed("529572")
+      iex> status
+      200
+
+  """
+  def game_linescore(game_pk) do
+    get("/game/" <> game_pk <> "/linescore") |> handle_response
+  end
+
+  @doc """
+  Given a valid pk (a game's unique id), fetches the play-by-play for that game.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.game_feed("529572")
+      iex> status
+      200
+
+  """
+  def game_play_by_play(game_pk) do
+    get("/game/" <> game_pk <> "/playByPlay") |> handle_response
   end
 
   @doc """

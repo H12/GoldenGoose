@@ -3,7 +3,7 @@ defmodule MLBStatsClientTest do
   alias MLBStats.Client
   doctest Client
 
-  @base_url "https://statsapi.mlb.com/api/v1.1"
+  @base_url "https://statsapi.mlb.com/api/v1"
 
   import Tesla.Mock
 
@@ -21,6 +21,20 @@ defmodule MLBStatsClientTest do
     _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
 
     assert %{url: _expected_url} = Client.game_feed(game_pk)
+  end
+
+  test "given a valid game pk, fetches the linescore" do
+    game_pk = "529572"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
+
+    assert %{url: _expected_url} = Client.game_linescore(game_pk)
+  end
+
+  test "given a valid game pk, fetches the play-by-play" do
+    game_pk = "529572"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
+
+    assert %{url: _expected_url} = Client.game_play_by_play(game_pk)
   end
 
   test "returns a schedule" do
