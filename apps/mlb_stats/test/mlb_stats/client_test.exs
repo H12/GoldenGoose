@@ -16,40 +16,64 @@ defmodule MLBStatsClientTest do
     :ok
   end
 
-  test "given a valid game pk, fetches the live feed" do
+  test "given a valid game pk, correctly requests the live feed" do
     game_pk = "529572"
     _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
 
     assert %{url: _expected_url} = Client.game_feed(game_pk)
   end
 
-  test "given a valid game pk, fetches the linescore" do
+  test "given a valid game pk and some fields, correctly requests the filtered live feed" do
     game_pk = "529572"
-    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
+    some_field = "someField"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live?fields=" <> some_field
+
+    assert %{url: _expected_url} = Client.game_feed(game_pk, [some_field])
+  end
+
+  test "given a valid game pk, correctly requests the linescore" do
+    game_pk = "529572"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/linescore"
 
     assert %{url: _expected_url} = Client.game_linescore(game_pk)
   end
 
-  test "given a valid game pk, fetches the play-by-play" do
+  test "given a valid game pk and some fields, correctly requests the filtered linescore" do
     game_pk = "529572"
-    _expected_url = @base_url <> "/game/" <> game_pk <> "/feed/live"
+    some_field = "someField"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/linescore?fields=" <> some_field
+
+    assert %{url: _expected_url} = Client.game_linescore(game_pk, [some_field])
+  end
+
+  test "given a valid game pk, correctly requests the play-by-play" do
+    game_pk = "529572"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/playByPlay"
 
     assert %{url: _expected_url} = Client.game_play_by_play(game_pk)
   end
 
-  test "returns a schedule" do
+  test "given a valid game pk and some fields, correctly requests the filtered play-by-play" do
+    game_pk = "529572"
+    some_field = "someField"
+    _expected_url = @base_url <> "/game/" <> game_pk <> "/playByPlay?fields=" <> some_field
+
+    assert %{url: _expected_url} = Client.game_play_by_play(game_pk, [some_field])
+  end
+
+  test "correctly requests a schedule" do
     _expected_url = @base_url <> "/schedule/?sportId=1"
     assert %{url: _expected_url} = Client.daily_schedule()
   end
 
-  test "returns a schedule for a given date" do
+  test "correctly requests a schedule for a given date" do
     date = "2019-06-08"
     _expected_url = @base_url <> "/schedule/?sportId=1&date=" <> date
 
     assert %{url: _expected_url} = Client.daily_schedule(date)
   end
 
-  test "returns a schedule for a given start and end date" do
+  test "correctly requests a schedule for a given start and end date" do
     start_date = "2019-06-01"
     end_date = "2019-06-30"
 

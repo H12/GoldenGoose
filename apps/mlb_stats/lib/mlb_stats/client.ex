@@ -22,6 +22,22 @@ defmodule MLBStats.Client do
   end
 
   @doc """
+  Given a valid pk (a game's unique id) and an array of fields, fetches the filtered live feed data
+  for that game.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.game_feed("529572")
+      iex> status
+      200
+
+  """
+  def game_feed(game_pk, fields) do
+    get("/game/" <> game_pk <> "/feed/live" <> "?fields=" <> Enum.join(fields, ","))
+    |> handle_response
+  end
+
+  @doc """
   Given a valid pk (a game's unique id), fetches the linescore for that game.
 
   ## Examples
@@ -36,6 +52,22 @@ defmodule MLBStats.Client do
   end
 
   @doc """
+  Given a valid pk (a game's unique id) and an array of fields, fetches the filtered linescore for
+  that game.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.game_feed("529572", ["innings", "home", "away", "runs"])
+      iex> status
+      200
+
+  """
+  def game_linescore(game_pk, fields) do
+    get("/game/" <> game_pk <> "/linescore" <> "?fields=" <> Enum.join(fields, ","))
+    |> handle_response
+  end
+
+  @doc """
   Given a valid pk (a game's unique id), fetches the play-by-play for that game.
 
   ## Examples
@@ -47,6 +79,22 @@ defmodule MLBStats.Client do
   """
   def game_play_by_play(game_pk) do
     get("/game/" <> game_pk <> "/playByPlay") |> handle_response
+  end
+
+  @doc """
+  Given a valid pk (a game's unique id) and an array of fields, fetches the filtered play-by-play
+  data for that game.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.game_feed("529572")
+      iex> status
+      200
+
+  """
+  def game_play_by_play(game_pk, fields) do
+    get("/game/" <> game_pk <> "/playByPlay" <> "?fields=" <> Enum.join(fields, ","))
+    |> handle_response
   end
 
   @doc """
