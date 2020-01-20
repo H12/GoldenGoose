@@ -22,6 +22,6 @@ defmodule GooseEggDb.Leaderboard.Pitcher do
     pitcher
     |> cast(attrs, [:player_id, :name, :team, :goose_eggs])
     |> unique_constraint(:player_id, message: @player_id_error_msg)
-    |> validate_required([:name, :goose_eggs, :player_id])
+    |> validate_required([:name, :player_id])
   end
 end
