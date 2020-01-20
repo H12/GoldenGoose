@@ -14,6 +14,6 @@ defmodule GooseEggDb.Leaderboard.Pitcher do
   def changeset(pitcher, attrs) do
     pitcher
     |> cast(attrs, [:name, :team, :goose_eggs])
-    |> validate_required([:name, :team, :goose_eggs])
+    |> validate_required([:name, :goose_eggs])
   end
 end

@@ -9,6 +9,5 @@ defmodule GooseEggDb.Repo.Migrations.CreatePitchers do
 
       timestamps()
     end
-
   end
 end
