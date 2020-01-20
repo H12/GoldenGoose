@@ -6,9 +6,9 @@ defmodule GooseEggDb.LeaderboardTest do
   describe "pitchers" do
     alias GooseEggDb.Leaderboard.Pitcher
 
-    @valid_attrs %{goose_eggs: 42, name: "some name", team: "some team"}
-    @update_attrs %{goose_eggs: 43, name: "some updated name", team: "some updated team"}
-    @invalid_attrs %{goose_eggs: nil, name: nil, team: nil}
+    @valid_attrs %{player_id: 1, goose_eggs: 42, name: "some name", team: "some team"}
+    @update_attrs %{player_id: 1, goose_eggs: 43, name: "some updated name", team: "some updated team"}
+    @invalid_attrs %{player_id: 1, goose_eggs: nil, name: nil, team: nil}
 
     def pitcher_fixture(attrs \\ %{}) do
       {:ok, pitcher} =
@@ -52,6 +52,12 @@ defmodule GooseEggDb.LeaderboardTest do
       pitcher = pitcher_fixture()
       assert {:error, %Ecto.Changeset{}} = Leaderboard.update_pitcher(pitcher, @invalid_attrs)
       assert pitcher == Leaderboard.get_pitcher!(pitcher.id)
+    end
+
+    test "increment_pitcher!/1 with valid data updates the pitcher" do
+      pitcher = pitcher_fixture()
+      assert {:ok, %Pitcher{} = pitcher} = Leaderboard.increment_pitcher!(pitcher.id)
+      assert pitcher.goose_eggs == 43
     end
 
     test "delete_pitcher/1 deletes the pitcher" do

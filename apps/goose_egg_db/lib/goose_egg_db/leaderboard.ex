@@ -74,6 +74,29 @@ defmodule GooseEggDb.Leaderboard do
   end
 
   @doc """
+  Increments a pitcher's goose eggs by one.
+
+  Raises `Ecto.NoResultsError` if the Pitcher does not exist.
+
+  ## Examples
+
+      iex> get_pitcher!(123)
+      %Pitcher{goose_eggs: 0}
+
+      iex> increment_pitcher!(123)
+      %Pitcher{goose_eggs: 1}
+
+      iex> get_pitcher!(456)
+      ** (Ecto.NoResultsError)
+  """
+  def increment_pitcher!(id) do
+    pitcher = get_pitcher!(id)
+    goose_eggs = pitcher.goose_eggs
+
+    update_pitcher(pitcher, %{goose_eggs: goose_eggs + 1})
+  end
+
+  @doc """
   Deletes a Pitcher.
 
   ## Examples
