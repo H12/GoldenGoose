@@ -126,6 +126,22 @@ defmodule MLBStats.Client do
   end
 
   @doc """
+  Fetches a filtered MLB schedule for a given date String, of format "yyyy-mm-dd", and an array of
+  fields.
+
+  ## Examples
+
+      iex> %{status: status} = MLBStats.Client.daily_schedule("2019-06-08")
+      iex> status
+      200
+
+  """
+  def daily_schedule(date, fields) do
+    get("/schedule/" <> "?sportId=1" <> "&date=" <> date <> "&fields=" <> Enum.join(fields, ","))
+    |> handle_response
+  end
+
+  @doc """
   Fetches the MLB schedule for a range of dates given two date Strings of format "yyyy-mm-dd" which
   denote the start and end dates of the range.
 
@@ -139,6 +155,28 @@ defmodule MLBStats.Client do
   """
   def ranged_schedule(start_date, end_date) do
     get("/schedule/" <> "?sportId=1" <> "&startDate=" <> start_date <> "&endDate=" <> end_date)
+    |> handle_response
+  end
+
+  @doc """
+  Fetches a filtered MLB schedule for a range of dates given two date Strings of format "yyyy-mm-dd" which
+  denote the start and end dates of the range, and a list of fields.
+
+
+  ## Examples
+
+    iex> %{status: status} = MLBStats.Client.ranged_schedule("2019-06-01", "2019-6-30")
+    iex> status
+    200
+
+  """
+  def ranged_schedule(start_date, end_date, fields) do
+    get(
+      "/schedule/" <>
+        "?sportId=1" <>
+        "&startDate=" <>
+        start_date <> "&endDate=" <> end_date <> "&fields=" <> Enum.join(fields, ",")
+    )
     |> handle_response
   end
 
