@@ -36,7 +36,7 @@ defmodule GooseEggDb.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:ecto_sql, "~> 3.1"},
+      {:ecto_sql, "~> 3.3"},
       {:postgrex, ">= 0.0.0"},
       {:jason, "~> 1.0"},
       {:mlb_stats, in_umbrella: true}
