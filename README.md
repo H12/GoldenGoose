@@ -1,4 +1,4 @@
-# Mlb
+# MLB Apps
 
-**TODO: Add description**
+An Elixir Umbrella containing projects related to Major League Baseball.
 
