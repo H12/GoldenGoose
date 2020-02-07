@@ -15,9 +15,12 @@ defmodule GooseEggDb do
     :batter,
     :pitcher,
     :runners,
+    :details,
+    :runner,
     :id,
     :fullName,
     :result,
+    :eventType,
     :awayScore,
     :homeScore,
     :about,
@@ -54,9 +57,71 @@ defmodule GooseEggDb do
     |> Stream.filter(fn play -> play.about.inning >= 7 end)
     |> Stream.chunk_by(fn play -> play.about.inning end)
     |> Enum.map(fn plays ->
-      Enum.group_by(plays, fn play -> play.about.halfInning end)
+      Enum.chunk_by(plays, fn play -> play.about.halfInning end)
     end)
   end
+
+  def parse_half_inning(plays) do
+    plays
+    |> Enum.reduce(%{}, fn play, acc ->
+      pitcher_id = play.matchup.pitcher.id
+
+      if Map.has_key?(acc, pitcher_id) do
+        parse_play(acc, play)
+      else
+        if goose_situation?(play) do
+          Map.put(acc, pitcher_id, %{
+            outs_recorded: 0,
+            runs_allowed: 0,
+            runners_inherited:
+              length(Enum.uniq_by(play.runners, fn r -> r.details.runner.id end)) - 1
+          })
+          |> parse_play(play)
+        else
+          acc
+        end
+      end
+    end)
+  end
+
+  def parse_play(acc, %{
+        about: %{hasOut: true, isScoringPlay: true},
+        matchup: %{pitcher: %{id: pitcher_id}}
+      }) do
+    %{
+      acc
+      | pitcher_id => %{
+          outs_recorded: acc[pitcher_id].outs_recorded + 1,
+          runs_allowed: acc[pitcher_id].runs_allowed + 1
+        }
+    }
+  end
+
+  def parse_play(acc, %{
+        about: %{hasOut: true},
+        matchup: %{pitcher: %{id: pitcher_id}},
+        result: %{eventType: event}
+      }) do
+    cond do
+      String.contains?(event, "triple_play") ->
+        update_in(acc[pitcher_id].outs_recorded, &(&1 + 3))
+
+      String.contains?(event, "double_play") ->
+        update_in(acc[pitcher_id].outs_recorded, &(&1 + 2))
+
+      true ->
+        update_in(acc[pitcher_id].outs_recorded, &(&1 + 1))
+    end
+  end
+
+  def parse_play(acc, %{
+        about: %{isScoringPlay: true},
+        matchup: %{pitcher: %{id: pitcher_id}}
+      }) do
+    update_in(acc[pitcher_id].runs_allowed, &(&1 + 1))
+  end
+
+  def parse_play(acc, _play), do: acc
 
   def goose_situation?(%{
         about: %{halfInning: "top"},
@@ -74,7 +139,7 @@ defmodule GooseEggDb do
         result: %{awayScore: away_score, homeScore: home_score},
         runners: runners
       }) do
-    lead = home_score - away_score
+    lead = away_score - home_score
 
     # The score is tied or the pitcher's team leads by no more than 2 OR the tying run is on base
     (0 <= lead and lead <= 2) or (lead > 0 and lead - (length(runners) - 1) >= 0)

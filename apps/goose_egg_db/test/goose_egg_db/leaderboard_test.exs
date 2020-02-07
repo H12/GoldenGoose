@@ -7,7 +7,12 @@ defmodule GooseEggDb.LeaderboardTest do
     alias GooseEggDb.Leaderboard.Pitcher
 
     @valid_attrs %{player_id: 1, goose_eggs: 42, name: "some name", team: "some team"}
-    @update_attrs %{player_id: 1, goose_eggs: 43, name: "some updated name", team: "some updated team"}
+    @update_attrs %{
+      player_id: 1,
+      goose_eggs: 43,
+      name: "some updated name",
+      team: "some updated team"
+    }
     @invalid_attrs %{player_id: 1, goose_eggs: nil, name: nil, team: nil}
 
     def pitcher_fixture(attrs \\ %{}) do
