@@ -15,6 +15,9 @@ defmodule GooseEggDb do
     :batter,
     :pitcher,
     :runners,
+    :movement,
+    :start,
+    :end,
     :details,
     :runner,
     :id,
@@ -81,6 +84,17 @@ defmodule GooseEggDb do
           acc
         end
       end
+    end)
+  end
+
+  @doc """
+  This function takes in a half-inning's-worth of plays and maps over them adding a key/value for
+  runners on base.
+  """
+  def add_runners_to_plays(half_inning) do
+    half_inning
+    |> Enum.map(fn play ->
+      # TODO: Check start/end of runners to determine if any runners made it on base, or were thrown out.
     end)
   end
 
